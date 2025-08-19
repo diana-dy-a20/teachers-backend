@@ -140,44 +140,21 @@ app.delete('/api/teachers/:id', async (req, res) => {
   console.log('----id')
   console.log(id)
 
-  // try {
-  //   let teachers = await readTeachersFromFile()
-  //   const initialLength = teachers.length
-  //   teachers = teachers.filter((teacher) => teacher.id != id)
-
-  //   if (teachers.length < initialLength) {
-  //     await writeTeachersToFile(teachers) // Зберігаємо оновлений список
-  //     res.status(204).send() // 204 No Content
-  //   } else {
-  //     res.status(404).json({ message: 'Вчителя не знайдено для видалення' })
-  //   }
-  // } catch (error) {
-  //   console.error('Помилка при видаленні вчителя:', error)
-  //   res.status(500).json({ message: 'Помилка сервера при видаленні вчителя' })
-  // }
   try {
-    let teachers = await readTeachersFromFile();
-    const initialLength = teachers.length;
-
-    // ✅ КЛЮЧОВЕ ВИПРАВЛЕННЯ ТУТ:
-    // Приводимо teacher.id до рядка перед порівнянням, щоб забезпечити,
-    // що ми порівнюємо рядки з рядками.
-    // Використовуємо строге нерівенство `!==` для більшої надійності.
-    teachers = teachers.filter((teacher) => String(teacher.id) !== String(id));
+    let teachers = await readTeachersFromFile()
+    const initialLength = teachers.length
+    teachers = teachers.filter((teacher) => teacher.id != id)
 
     if (teachers.length < initialLength) {
-      await writeTeachersToFile(teachers); // Зберігаємо оновлений список у файл teachers.json
-      console.log('Teacher deleted. New list length:', teachers.length); // Лог успіху
-      res.status(204).send(); // 204 No Content - успішно, немає вмісту для повернення
+      await writeTeachersToFile(teachers) // Зберігаємо оновлений список
+      res.status(204).send() // 204 No Content
     } else {
-      console.log('Teacher not found for deletion with ID:', id); // Лог, якщо вчителя не знайдено
-      res.status(404).json({ message: 'Вчителя не знайдено для видалення' });
+      res.status(404).json({ message: 'Вчителя не знайдено для видалення' })
     }
   } catch (error) {
-    console.error('Помилка при видаленні вчителя:', error);
-    res.status(500).json({ message: 'Помилка сервера при видаленні вчителя' });
+    console.error('Помилка при видаленні вчителя:', error)
+    res.status(500).json({ message: 'Помилка сервера при видаленні вчителя' })
   }
-
 })
 
 // Запуск сервера
